@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul's Meal Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0e0e0e;
+    --bg2: #161616;
+    --bg3: #1f1f1f;
+    --border: rgba(255,255,255,0.07);
+    --text: #f0ede8;
+    --muted: #6b6760;
+    --accent: #c8f56a;
+    --accent2: #f5a623;
+    --r: 10px;
+  }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 2.5rem 1.5rem 4rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  .header { margin-bottom: 2.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; }
+  .header-top { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.4rem; }
+  h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+  .pill { font-family: 'DM Mono', monospace; font-size: 11px; background: var(--accent); color: #0e0e0e; padding: 3px 10px; border-radius: 100px; font-weight: 500; }
+  .header-sub { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); }
+
+  /* STAT ROW */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 2.5rem; }
+  .stat { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 16px; }
+  .stat-num { font-size: 24px; font-weight: 700; color: var(--accent); letter-spacing: -0.03em; }
+  .stat-lbl { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* SECTION */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 2rem 0 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* CARDS */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 1.2rem;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: rgba(255,255,255,0.15); }
+  .card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 100px;
+    letter-spacing: 0.04em;
+  }
+  .tag { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+  .card-title { font-size: 15px; font-weight: 700; color: var(--text); margin: 0 0 2px; letter-spacing: -0.01em; }
+  .card-sub { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); margin: 0 0 12px; }
+
+  .rows { border-top: 1px solid var(--border); }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 13px;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 8px;
+  }
+  .row:last-child { border-bottom: none; }
+  .row-note { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); text-align: right; flex-shrink: 0; }
+
+  .veggie-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 10px;
+    padding: 8px 10px;
+    background: var(--bg3);
+    border-radius: 6px;
+    border-left: 2px solid var(--accent);
+    line-height: 1.6;
+  }
+
+  .macros { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+  .macro {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 8px;
+    color: var(--muted);
+  }
+  .macro b { color: var(--accent); font-weight: 500; }
+
+  /* TIMELINE */
+  .timeline-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 1.2rem 1.4rem;
+  }
+  .tl { display: grid; grid-template-columns: 52px 1fr; gap: 0 14px; }
+  .tl-time {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    padding: 5px 0;
+    white-space: nowrap;
+  }
+  .tl-text {
+    font-size: 13px;
+    color: var(--text);
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .tl-text:last-child { border-bottom: none; }
+
+  /* GROCERY */
+  .grocery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+  .grocery-col {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 1rem 1.1rem;
+  }
+  .grocery-col-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--accent2);
+    margin: 0 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+  .gitem {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 12px;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 6px;
+  }
+  .gitem:last-child { border-bottom: none; }
+  .gstore { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); flex-shrink: 0; }
+
+  /* VEGGIE GUIDE */
+  .veggie-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 1.2rem 1.4rem;
+  }
+  .vrow {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 12px;
+    font-size: 13px;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .vrow:last-child { border-bottom: none; }
+  .vkey { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .vrow { grid-template-columns: 1fr; gap: 2px; }
+    h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <h1>Weekly Meal Prep</h1>
+    <span class="pill">HARDCORE CUT</span>
+  </div>
+  <p class="header-sub">5 rotations · Sunday cook · ~90 min · high protein / low carb / low fat</p>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num">~570</div><div class="stat-lbl">Breakfast cal</div></div>
+  <div class="stat"><div class="stat-num">~590</div><div class="stat-lbl">Avg meal cal</div></div>
+  <div class="stat"><div class="stat-num">5</div><div class="stat-lbl">Rotations</div></div>
+  <div class="stat"><div class="stat-num">14–15</div><div class="stat-lbl">Containers</div></div>
+</div>
+
+<div class="section-label">Lunch-style · 3 rotations · ~3 containers each · 9 meals</div>
+<div class="card-grid">
+
+  <div class="card">
+    <div class="card-head">
+      <span class="badge" style="background:#1a2e1a;color:#7ecb7e;">Mediterranean</span>
+      <span class="tag">pot only · barely any cooking</span>
+    </div>
+    <p class="card-title">Salmon lentil bowl</p>
+    <p class="card-sub">Canned salmon · lentils · feta · potato</p>
+    <div class="rows">
+      <div class="row"><span>Canned salmon 5 oz (3 cans)</span><span class="row-note">drain, no cook</span></div>
+      <div class="row"><span>Green lentils (1 cup dry)</span><span class="row-note">boil 20 min</span></div>
+      <div class="row"><span>Feta crumbles</span><span class="row-note">stir in cold</span></div>
+      <div class="row"><span>Russet potato (½ medium/container)</span><span class="row-note">air fryer cubed</span></div>
+      <div class="row"><span>Lemon juice, olive oil, dill</span><span class="row-note">Target</span></div>
+    </div>
+    <div class="veggie-note">Raw: spinach + cherry tomatoes. Eat cold — great as a salad-style bowl.</div>
+    <div class="macros">
+      <div class="macro">~<b>580</b> cal</div>
+      <div class="macro"><b>52g</b> protein</div>
+      <div class="macro"><b>42g</b> carbs</div>
+      <div class="macro"><b>16g</b> fat</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <span class="badge" style="background:#2e1a0e;color:#f5a04a;">Middle Eastern</span>
+      <span class="tag">air fryer · marinate overnight</span>
+    </div>
+    <p class="card-title">Shawarma chicken breast</p>
+    <p class="card-sub">Chicken breast · Greek yogurt marinade · potato</p>
+    <div class="rows">
+      <div class="row"><span>Boneless skinless breast (1.5 lb)</span><span class="row-note">air fryer 375°F 20 min</span></div>
+      <div class="row"><span>Shawarma spice blend</span><span class="row-note">Whole Foods</span></div>
+      <div class="row"><span>Greek yogurt (3 tbsp) + lemon juice</span><span class="row-note">marinade base</span></div>
+      <div class="row"><span>Russet potato (½ medium/container)</span><span class="row-note">air fryer cubed</span></div>
+    </div>
+    <div class="veggie-note">Marinate Saturday night. Raw: coleslaw mix pile on top, wilts perfectly when microwaved.</div>
+    <div class="macros">
+      <div class="macro">~<b>570</b> cal</div>
+      <div class="macro"><b>58g</b> protein</div>
+      <div class="macro"><b>34g</b> carbs</div>
+      <div class="macro"><b>10g</b> fat</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <span class="badge" style="background:#1a1a2e;color:#8080f5;">Korean</span>
+      <span class="tag">air fryer · marinate overnight</span>
+    </div>
+    <p class="card-title">Gochujang chicken breast</p>
+    <p class="card-sub">Chicken breast · gochujang glaze · potato</p>
+    <div class="rows">
+      <div class="row"><span>Boneless skinless breast (1.5 lb)</span><span class="row-note">air fryer 375°F 20 min</span></div>
+      <div class="row"><span>Gochujang (2 tbsp)</span><span class="row-note">Jewel / Whole Foods</span></div>
+      <div class="row"><span>Soy sauce, garlic, sesame oil, honey</span><span class="row-note">tiny amounts</span></div>
+      <div class="row"><span>Russet potato (½ medium/container)</span><span class="row-note">air fryer cubed</span></div>
+    </div>
+    <div class="veggie-note">Marinate Saturday night alongside shawarma. Raw: frozen mixed veggies microwaved + dumped in.</div>
+    <div class="macros">
+      <div class="macro">~<b>560</b> cal</div>
+      <div class="macro"><b>56g</b> protein</div>
+      <div class="macro"><b>36g</b> carbs</div>
+      <div class="macro"><b>10g</b> fat</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="section-label">Dinner-style · 2 rotations · ~3 containers each · 6 meals · lighter carbs</div>
+<div class="card-grid">
+
+  <div class="card">
+    <div class="card-head">
+      <span class="badge" style="background:#2e2a1a;color:#e8d080;">Italian</span>
+      <span class="tag">air fryer · 18 min</span>
+    </div>
+    <p class="card-title">Turkey meatballs</p>
+    <p class="card-sub">Ground turkey 99/1 · egg · garlic · potato</p>
+    <div class="rows">
+      <div class="row"><span>Ground turkey 99/1 (1.5 lb)</span><span class="row-note">roll ~18 balls</span></div>
+      <div class="row"><span>1 egg + minced garlic</span><span class="row-note">binder, no breadcrumbs</span></div>
+      <div class="row"><span>Parsley, parmesan (small amt), salt</span><span class="row-note">Target / Jewel</span></div>
+      <div class="row"><span>Russet potato (½ medium/container)</span><span class="row-note">air fryer cubed</span></div>
+    </div>
+    <div class="veggie-note">Air fryer 375°F for 15–18 min, no oil needed. Raw: spinach bag — handful per container.</div>
+    <div class="macros">
+      <div class="macro">~<b>560</b> cal</div>
+      <div class="macro"><b>60g</b> protein</div>
+      <div class="macro"><b>32g</b> carbs</div>
+      <div class="macro"><b>8g</b> fat</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <span class="badge" style="background:#1a2428;color:#70c8d8;">Japanese</span>
+      <span class="tag">wok only · 4 min cook</span>
+    </div>
+    <p class="card-title">Teriyaki flank steak</p>
+    <p class="card-sub">Flank steak · teriyaki glaze · potato</p>
+    <div class="rows">
+      <div class="row"><span>Flank steak (1.25 lb)</span><span class="row-note">slice thin, wok high heat</span></div>
+      <div class="row"><span>Soy sauce, mirin, garlic, ginger</span><span class="row-note">Jewel / Target</span></div>
+      <div class="row"><span>Frozen mixed veggies</span><span class="row-note">microwave + toss in</span></div>
+      <div class="row"><span>Russet potato (½ medium/container)</span><span class="row-note">air fryer cubed</span></div>
+    </div>
+    <div class="veggie-note">Slice against the grain on Sunday. High heat wok, 2 min each side max. Slice thin before storing.</div>
+    <div class="macros">
+      <div class="macro">~<b>590</b> cal</div>
+      <div class="macro"><b>52g</b> protein</div>
+      <div class="macro"><b>34g</b> carbs</div>
+      <div class="macro"><b>14g</b> fat</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="section-label">Sunday cook order · fits in ~90 min</div>
+<div class="timeline-box">
+  <div class="tl">
+    <span class="tl-time">Sat PM</span><span class="tl-text">Mix shawarma + gochujang marinades separately. Coat chicken, cover, fridge overnight.</span>
+    <span class="tl-time">0:00</span><span class="tl-text">Start lentils boiling in pot (20 min hands-off).</span>
+    <span class="tl-time">0:05</span><span class="tl-text">Air fryer batch 1: shawarma chicken breast at 375°F, 20 min. Meanwhile cube all potatoes.</span>
+    <span class="tl-time">0:25</span><span class="tl-text">Remove chicken, portion. Air fryer batch 2: gochujang chicken, 20 min.</span>
+    <span class="tl-time">0:30</span><span class="tl-text">Assemble salmon lentil bowls cold (lentils done). Wok: flank steak, 4–5 min total, slice and portion.</span>
+    <span class="tl-time">0:45</span><span class="tl-text">Remove gochujang chicken, portion. Roll turkey meatballs while air fryer is free.</span>
+    <span class="tl-time">0:50</span><span class="tl-text">Air fryer batch 3: turkey meatballs at 375°F, 18 min.</span>
+    <span class="tl-time">1:05</span><span class="tl-text">Air fryer batch 4: cubed russet potatoes at 400°F, 20 min (light spray of oil or dry).</span>
+    <span class="tl-time">1:10</span><span class="tl-text">Portion meatballs. Portion potatoes across all containers once done.</span>
+    <span class="tl-time">1:30</span><span class="tl-text">Done. Only dishes: one pot, one wok, air fryer basket.</span>
+  </div>
+</div>
+
+<div class="section-label">Fresh veggie storage · prep once on Sunday</div>
+<div class="veggie-box">
+  <div class="vrow"><span class="vkey">Spinach (5 oz bag)</span><span>Pre-washed, grab handful per meal. Wilts in microwave or eat cold with salmon bowl. Zero prep.</span></div>
+  <div class="vrow"><span class="vkey">Cherry tomatoes</span><span>No prep. Grab a small handful per meal from the container. Lasts the full week.</span></div>
+  <div class="vrow"><span class="vkey">Coleslaw mix (bag)</span><span>Zero prep. Pile on shawarma before microwaving — wilts perfectly.</span></div>
+  <div class="vrow"><span class="vkey">Frozen mixed veggies</span><span>Microwave from frozen, dump into gochujang chicken or flank steak containers. No Sunday prep needed.</span></div>
+</div>
+
+<div class="section-label">Grocery list · Target · Jewel-Osco · Whole Foods</div>
+<div class="grocery-grid">
+  <div class="grocery-col">
+    <p class="grocery-col-title">Proteins</p>
+    <div class="gitem"><span>Boneless skinless breast (3 lb)</span><span class="gstore">Target / Jewel</span></div>
+    <div class="gitem"><span>Ground turkey 99/1 (1.5 lb)</span><span class="gstore">Target / Jewel</span></div>
+    <div class="gitem"><span>Flank steak (1.25 lb)</span><span class="gstore">Jewel</span></div>
+    <div class="gitem"><span>Canned salmon 5 oz (3 cans)</span><span class="gstore">Target Good & Gather</span></div>
+    <div class="gitem"><span>Eggs (1 used as binder)</span><span class="gstore">Target / Jewel</span></div>
+  </div>
+  <div class="grocery-col">
+    <p class="grocery-col-title">Carbs + legumes</p>
+    <div class="gitem"><span>Russet potatoes (4–5 medium)</span><span class="gstore">Target / Jewel</span></div>
+    <div class="gitem"><span>Green lentils dry (1 cup)</span><span class="gstore">Jewel / Whole Foods</span></div>
+    <div class="gitem"><span>Frozen mixed veggies (bag)</span><span class="gstore">Target / Jewel</span></div>
+  </div>
+  <div class="grocery-col">
+    <p class="grocery-col-title">Fresh veggies</p>
+    <div class="gitem"><span>Pre-washed spinach (5 oz bag)</span><span class="gstore">Target / Jewel</span></div>
+    <div class="gitem"><span>Cherry tomatoes (pint)</span><span class="gstore">Target / Jewel</span></div>
+    <div class="gitem"><span>Coleslaw mix bag</span><span class="gstore">Target / Jewel</span></div>
+  </div>
+  <div class="grocery-col">
+    <p class="grocery-col-title">Pantry + dairy</p>
+    <div class="gitem"><span>Shawarma spice blend</span><span class="gstore">Whole Foods</span></div>
+    <div class="gitem"><span>Gochujang paste</span><span class="gstore">Jewel / Whole Foods</span></div>
+    <div class="gitem"><span>Greek yogurt (small tub)</span><span class="gstore">Target / Jewel</span></div>
+    <div class="gitem"><span>Feta crumbles</span><span class="gstore">Target Good & Gather</span></div>
+    <div class="gitem"><span>Soy sauce, sesame oil</span><span class="gstore">Target / Jewel</span></div>
+    <div class="gitem"><span>Mirin</span><span class="gstore">Jewel / Whole Foods</span></div>
+    <div class="gitem"><span>Lemon juice (bottled)</span><span class="gstore">Target / Jewel</span></div>
+    <div class="gitem"><span>Garlic (minced jar)</span><span class="gstore">Target / Jewel</span></div>
+    <div class="gitem"><span>Parmesan (small block/grated)</span><span class="gstore">Target / Jewel</span></div>
+    <div class="gitem"><span>Honey (small bottle)</span><span class="gstore">Target / Jewel</span></div>
+  </div>
+</div>
+
+</body>
+</html>
